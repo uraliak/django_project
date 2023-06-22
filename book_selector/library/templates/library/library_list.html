@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+<h1>Библиотеки: </h1> 
+<ul> {% for library in object_list %} 
+    <li>
+        <p>Название - {{ library.name }}</p>
+        <p>Адрес - {{ library.address }}</p>
+    </li> 
+    {% empty %} 
+    <li>No libraries found.</li> 
+    {% endfor %} 
+</ul> {% endblock %}

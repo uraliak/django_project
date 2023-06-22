@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+<h1>Издательства: </h1> 
+<ul> {% for publisher in object_list %} 
+    <li>
+        <p>Название - {{ publisher.name }}</p>
+        <p>Адрес - {{ publisher.address }}</p>
+    </li> 
+    {% empty %} 
+    <li>No publishers found.</li> 
+    {% endfor %} 
+</ul> {% endblock %}
+

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+<h1>Книги: </h1> 
+<ul> {% for book in object_list %} 
+    <li>
+        <p>Название - {{ book.title }}</p>
+        <p>Автор книги - {{ book.author }}</p>
+        <p>Издательство - {{ book.publisher }}</p>
+        <p>Библиотека - {{ book.library.name }}</p>
+    </li> 
+    {% empty %} 
+    <li>No books found.</li> 
+    {% endfor %} 
+</ul> {% endblock %}

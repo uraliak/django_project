@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+<h1>Пользователи: </h1> 
+<ul> {% for user in object_list %} 
+    <li>
+        <p>Имя - {{ user.name }}</p>
+        <p>Почта(email) - {{ user.email }}</p>
+    </li> 
+    {% empty %} 
+    <li>No users found.</li> 
+    {% endfor %} 
+</ul> {% endblock %}

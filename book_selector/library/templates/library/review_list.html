@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+<h1>Отзывы: </h1> 
+<ul> {% for review in object_list %} 
+    <li>
+        <p>Книга - {{ review.book.title }}</p>
+        <p>Пользователь - {{ review.user }}</p>
+        <p>Рейтинг - {{ review.rating }}</p>
+        <p>Комментарий - {{ review.comment }}</p>
+    </li> 
+    {% empty %} 
+    <li>No reviews found.</li> 
+    {% endfor %} 
+</ul> {% endblock %}
