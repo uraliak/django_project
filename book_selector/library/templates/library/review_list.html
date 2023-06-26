@@ -1,15 +1,30 @@
 {% extends 'base.html' %}
 
-{% block content %} 
-<h1>Отзывы: </h1> 
-<ul> {% for review in object_list %} 
-    <li>
-        <p>Книга - {{ review.book.title }}</p>
-        <p>Пользователь - {{ review.user }}</p>
-        <p>Рейтинг - {{ review.rating }}</p>
-        <p>Комментарий - {{ review.comment }}</p>
-    </li> 
-    {% empty %} 
-    <li>No reviews found.</li> 
-    {% endfor %} 
-</ul> {% endblock %}
+{% block content %}
+
+<h1 class="title">Отзывы</h1> 
+<table class="reviews-table"> 
+    <thead> 
+        <tr> 
+            <th class="book-title-column">Книга</th> 
+            <th class="user-column">Пользователь</th> 
+            <th class="rating-column">Рейтинг</th> 
+            <th class="comment-column">Комментарий</th> 
+        </tr> 
+    </thead> 
+    <tbody> 
+        {% for review in object_list %} 
+        <tr> 
+            <td>{{ review.book.title }}</td> 
+            <td>{{ review.user }}</td> 
+            <td>{{ review.rating }}</td> 
+            <td>{{ review.comment }}</td> 
+        </tr> 
+        {% empty %} 
+        <tr class="empty-row"> 
+            <td colspan="4">No reviews found.</td> 
+        </tr> 
+        {% endfor %} 
+    </tbody> 
+</table> 
+{% endblock %}

@@ -1,14 +1,25 @@
 {% extends 'base.html' %}
 
-{% block content %} 
-<h1>Издательства: </h1> 
-<ul> {% for publisher in object_list %} 
-    <li>
-        <p>Название - {{ publisher.name }}</p>
-        <p>Адрес - {{ publisher.address }}</p>
-    </li> 
-    {% empty %} 
-    <li>No publishers found.</li> 
-    {% endfor %} 
-</ul> {% endblock %}
+{% block content %}
+
+<h1 class="title">Издательства</h1> 
+<table class="publishers-table"> 
+    <thead> 
+        <tr> 
+            <th class="publisher-name-column">Название</th> 
+            <th class="publisher-address-column">Адрес</th> 
+        </tr> 
+    </thead> 
+    <tbody> 
+        {% for publisher in object_list %} 
+        <tr> <td>{{ publisher.name }}</td> 
+            <td>{{ publisher.address }}</td> 
+        </tr> {% empty %} 
+        <tr class="empty-row"> 
+            <td colspan="2">No publishers found.</td> 
+        </tr> 
+        {% endfor %} 
+    </tbody> 
+</table> 
+{% endblock %}
 

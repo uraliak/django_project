@@ -1,15 +1,29 @@
 {% extends 'base.html' %}
+{% block content %}
 
-{% block content %} 
-<h1>Книги: </h1> 
-<ul> {% for book in object_list %} 
-    <li>
-        <p>Название - {{ book.title }}</p>
-        <p>Автор книги - {{ book.author }}</p>
-        <p>Издательство - {{ book.publisher }}</p>
-        <p>Библиотека - {{ book.library.name }}</p>
-    </li> 
-    {% empty %} 
-    <li>No books found.</li> 
-    {% endfor %} 
-</ul> {% endblock %}
+<h1 class="title">Книги</h1> 
+<table class="books-table"> 
+    <thead> 
+        <tr> 
+            <th class="book-title-column">Название</th> 
+            <th class="book-author-column">Автор книги</th> 
+            <th class="book-publisher-column">Издательство</th> 
+            <th class="book-library-column">Библиотека</th> 
+        </tr> 
+    </thead> 
+    <tbody> 
+        {% for book in object_list %} 
+        <tr> 
+            <td>{{ book.title }}</td> 
+            <td>{{ book.author }}</td> 
+            <td>{{ book.publisher }}</td> 
+            <td>{{ book.library.name }}</td> 
+        </tr> 
+        {% empty %} 
+        <tr class="empty-row"> 
+            <td colspan="4">No books found.</td> 
+        </tr> 
+        {% endfor %}
+    </tbody> 
+</table> 
+{% endblock %}

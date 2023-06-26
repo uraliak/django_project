@@ -1,13 +1,26 @@
 {% extends 'base.html' %}
 
-{% block content %} 
-<h1>Пользователи: </h1> 
-<ul> {% for user in object_list %} 
-    <li>
-        <p>Имя - {{ user.name }}</p>
-        <p>Почта(email) - {{ user.email }}</p>
-    </li> 
-    {% empty %} 
-    <li>No users found.</li> 
-    {% endfor %} 
-</ul> {% endblock %}
+{% block content %}
+
+<h1 class="title">Пользователи</h1> 
+<table class="users-table"> 
+    <thead> 
+        <tr> 
+            <th class="user-name-column">Имя</th> 
+            <th class="user-email-column">Почта(email)</th> 
+        </tr> 
+    </thead> 
+    <tbody> 
+        {% for user in object_list %} 
+        <tr> 
+            <td>{{ user.name }}</td> 
+            <td>{{ user.email }}</td> 
+        </tr> 
+        {% empty %} 
+        <tr class="empty-row"> 
+            <td colspan="2">No users found.</td> 
+        </tr> 
+        {% endfor %} 
+    </tbody> 
+</table> 
+{% endblock %}

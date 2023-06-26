@@ -1,13 +1,26 @@
 {% extends 'base.html' %}
 
-{% block content %} 
-<h1>Авторы: </h1> 
-<ul> {% for author in object_list %} 
-    <li>
-        <p>Имя - {{ author.name }}</p>
-        <p>Почта(email) - {{ author.email }}</p>
-    </li> 
-    {% empty %} 
-    <li>No authors found.</li> 
-    {% endfor %} 
-</ul> {% endblock %}
+{% block content %}
+
+<h1 class="title">Авторы</h1> 
+<table class="authors-table"> 
+    <thead> 
+        <tr> 
+            <th class="author-name-column">Имя</th> 
+            <th class="author-email-column">Почта(email)</th> 
+        </tr> 
+    </thead> 
+    <tbody> 
+        {% for author in object_list %} 
+        <tr> 
+            <td>{{ author.name }}</td> 
+            <td>{{ author.email }}</td> 
+        </tr> 
+        {% empty %} 
+        <tr class="empty-row"> 
+            <td colspan="2">No authors found.</td> 
+        </tr> 
+        {% endfor %} 
+    </tbody> 
+</table> 
+{% endblock %}

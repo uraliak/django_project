@@ -1,13 +1,26 @@
 {% extends 'base.html' %}
 
-{% block content %} 
-<h1>Библиотеки: </h1> 
-<ul> {% for library in object_list %} 
-    <li>
-        <p>Название - {{ library.name }}</p>
-        <p>Адрес - {{ library.address }}</p>
-    </li> 
-    {% empty %} 
-    <li>No libraries found.</li> 
-    {% endfor %} 
-</ul> {% endblock %}
+{% block content %}
+
+<h1 class="title">Библиотеки</h1> 
+<table class="libraries-table"> 
+    <thead> 
+        <tr> 
+            <th class="library-name-column">Название</th> 
+            <th class="library-address-column">Адрес</th> 
+        </tr> 
+    </thead> 
+    <tbody> 
+        {% for library in object_list %} 
+        <tr> 
+            <td>{{ library.name }}</td> 
+            <td>{{ library.address }}</td> 
+        </tr> 
+        {% empty %} 
+        <tr class="empty-row"> 
+            <td colspan="2">No libraries found.</td> 
+        </tr> 
+        {% endfor %} 
+    </tbody> 
+</table> 
+{% endblock %}
