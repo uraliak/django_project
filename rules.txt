@@ -1,0 +1,8 @@
+POST:
+
+$jsonData = '{"name": "Invalid Author", "email": "invalid.email@example.com"}'
+Invoke-RestMethod -Method POST -Uri http://127.0.0.1:8000/authors/ -Body $jsonData -ContentType 'application/json'
+
+GET:
+
+Invoke-RestMethod -Method GET -Uri http://127.0.0.1:8000/authors/custom_list_action/

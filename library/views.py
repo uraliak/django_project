@@ -1,0 +1,297 @@
+from rest_framework import generics, serializers, viewsets  # Готовые представления для наследования
+from rest_framework.permissions import AllowAny  # Импорт прав доступа к представлению
+
+from .models import Author, Publisher, Library, Book, User, Review
+from .serializers import AuthorSerializer, PublisherSerializer, LibrarySerializer, BookSerializer, UserSerializer, ReviewSerializer
+
+from django.db.models import Q
+
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
+
+from rest_framework.decorators import action
+
+# from django.views.generic.list import ListView 
+
+
+class AuthorListView(viewsets.ModelViewSet): # (ListView)
+    model = Author
+    template_name = 'author_list.html'
+    queryset = Author.objects.all()  # Данные с которыми хотим производить манипуляции
+    serializer_class = AuthorSerializer  # Класс сериализации для валидации и сериализации данных
+    permission_classes = [AllowAny, ]  # Права доступа к представлению. AllowAny - доступ открыт для всех
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        return Author.objects.filter(Q(name__startswith='J') | Q(email__startswith='g')) 
+
+    def get(self, request, *args, **kwargs):
+        # Используем пагинацию
+        self.pagination_class.page_size = 2  # Количество элементов на странице
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    def validate_email(self, email):
+        # Пример простой валидации email
+        if not email.endswith('@mail.com'):
+            raise serializers.ValidationError("Email должен быть на домене example.com")
+
+    @action(methods=['GET'], detail=False)
+    def custom_list_action(self, request, *args, **kwargs):
+        # Пример логики для дополнительного метода списка (GET)
+        queryset = self.filter_queryset(self.get_queryset())
+        serialized_data = self.get_serializer(queryset, many=True).data
+        return Response({"message": "Custom List Action", "data": serialized_data})
+
+    # @action(methods=['POST'], detail=True)
+    # def custom_detail_action(self, request, *args, **kwargs):
+    #     # Пример логики для дополнительного метода объекта (POST)
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(instance, data=request.data, partial=True)
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save()
+    #     return Response({"message": "Custom Detail Action", "data": serializer.data})
+
+class PublisherListView(generics.ListCreateAPIView): # (ListView)
+    model = Publisher 
+    template_name = 'publisher_list.html'
+    queryset = Publisher.objects.all()  # Данные с которыми хотим производить манипуляции
+    # queryset = Book.objects.filter(Q(publisher__address__icontains='New York, USA')) #| Q(publisher__name__icontains='Wiley')
+    serializer_class = PublisherSerializer  # Класс сериализации для валидации и сериализации данных
+    permission_classes = [AllowAny, ]  # Права доступа к представлению. AllowAny - доступ открыт для всех
+
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        return Publisher.objects.filter(~Q(address__startswith='N'))
+
+    def get(self, request, *args, **kwargs):
+        # Используем пагинацию
+        self.pagination_class.page_size = 2 # Количество элементов на странице
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    def validate_email(self, email):
+        # Пример простой валидации email
+        if not email.endswith('@mail.com'):
+            raise serializers.ValidationError("Email должен быть на домене example.com")
+
+    # @action(methods=['GET'], detail=False)
+    # def custom_list_action(self, request, *args, **kwargs):
+    #     # Пример логики для дополнительного метода списка (GET)
+    #     queryset = self.filter_queryset(self.get_queryset())
+    #     serialized_data = self.get_serializer(queryset, many=True).data
+    #     return Response({"message": "Custom List Action", "data": serialized_data})
+
+    @action(methods=['POST'], detail=True)
+    def custom_detail_action(self, request, *args, **kwargs):
+        # Пример логики для дополнительного метода объекта (POST)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "Custom Detail Action", "data": serializer.data})
+
+class LibraryListView(generics.ListCreateAPIView): # (ListView)
+    model = Library
+    template_name = 'library_list.html'
+    queryset = Library.objects.all()  # Данные с которыми хотим производить манипуляции
+    serializer_class = LibrarySerializer  # Класс сериализации для валидации и сериализации данных
+    permission_classes = [AllowAny, ]
+    
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        return Library.objects.filter(Q(name__startswith='B') | Q(name__startswith='L'))
+
+    def get(self, request, *args, **kwargs):
+        # Используем пагинацию
+        self.pagination_class.page_size = 2  # Количество элементов на странице
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    def validate_email(self, email):
+        # Пример простой валидации email
+        if not email.endswith('@mail.com'):
+            raise serializers.ValidationError("Email должен быть на домене example.com")
+
+    # @action(methods=['GET'], detail=False)
+    # def custom_list_action(self, request, *args, **kwargs):
+    #     # Пример логики для дополнительного метода списка (GET)
+    #     queryset = self.filter_queryset(self.get_queryset())
+    #     serialized_data = self.get_serializer(queryset, many=True).data
+    #     return Response({"message": "Custom List Action", "data": serialized_data})
+
+    
+    @action(methods=['POST'], detail=True)
+    def custom_detail_action(self, request, *args, **kwargs):
+        # Пример логики для дополнительного метода объекта (POST)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "Custom Detail Action", "data": serializer.data})
+
+      # Права доступа к представлению. AllowAny - доступ открыт для всех
+
+class BookListView(viewsets.ModelViewSet): # (ListView)
+    model = Book
+    template_name = 'book_list.html'
+    queryset = Book.objects.all()
+    # queryset = Book.objects.all()  # Данные с которыми хотим производить манипуляции
+    # queryset = Book.objects.filter(Q(title__icontains='1984') | Q(author__name__icontains='William Golding') | Q(publisher__name__icontains = 'HarperCollins'))
+    serializer_class = BookSerializer  # Класс сериализации для валидации и сериализации данных
+    permission_classes = [AllowAny, ]  # Права доступа к представлению. AllowAny - доступ открыт для всех
+    pagination_class = PageNumberPagination
+    
+    def get_queryset(self):
+        return Book.objects.filter(Q(title__startswith='T') & ~Q(publisher__name='HarperCollins'))
+    
+    def get(self, request, *args, **kwargs):
+        # Используем пагинацию
+        self.pagination_class.page_size = 1 # Количество элементов на странице
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    # def validate_email(self, email):
+    #     # Пример простой валидации email
+    #     if not email.endswith('@mail.com'):
+    #         raise serializers.ValidationError("Email должен быть на домене example.com")
+    @action(methods=['GET'], detail=False)
+    def custom_list_action(self, request, *args, **kwargs):
+        # Пример логики для дополнительного метода списка (GET)
+        queryset = self.filter_queryset(self.get_queryset())
+        serialized_data = self.get_serializer(queryset, many=True).data
+        return Response({"message": "Custom List Action", "data": serialized_data})
+
+    # @action(methods=['POST'], detail=True)
+    # def custom_detail_action(self, request, *args, **kwargs):
+    #     # Пример логики для дополнительного метода объекта (POST)
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(instance, data=request.data, partial=True)
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save()
+    #     return Response({"message": "Custom Detail Action", "data": serializer.data})
+
+class UserListView(generics.ListCreateAPIView): # (ListView)
+    model = User
+    template_name = 'user_list.html'
+    queryset = User.objects.all()  # Данные с которыми хотим производить манипуляции
+    serializer_class = UserSerializer  # Класс сериализации для валидации и сериализации данных
+    permission_classes = [AllowAny, ]  # Права доступа к представлению. AllowAny - доступ открыт для всех
+
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        return User.objects.filter(Q(email__startswith='j') | Q(email__startswith='m'))
+
+    def get(self, request, *args, **kwargs):
+        # Используем пагинацию
+        self.pagination_class.page_size = 2  # Количество элементов на странице
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    
+    # def validate_email(self, email):
+    #     # Пример простой валидации email
+    #     if not email.endswith('@mail.com'):
+    #         raise serializers.ValidationError("Email должен быть на домене example.com")
+
+    # @action(methods=['GET'], detail=False)
+    # def custom_list_action(self, request, *args, **kwargs):
+    #     # Пример логики для дополнительного метода списка (GET)
+    #     queryset = self.filter_queryset(self.get_queryset())
+    #     serialized_data = self.get_serializer(queryset, many=True).data
+    #     return Response({"message": "Custom List Action", "data": serialized_data})
+
+    @action(methods=['POST'], detail=True)
+    def custom_detail_action(self, request, *args, **kwargs):
+        # Пример логики для дополнительного метода объекта (POST)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "Custom Detail Action", "data": serializer.data})
+
+class ReviewListView(viewsets.ModelViewSet): # (ListView)
+    model = Review
+    template_name = 'review_list.html'
+    queryset = Review.objects.all()  # Данные с которыми хотим производить манипуляции
+    # queryset = Book.objects.filter(Q(review__rating__icontains='5') | Q(title__icontains='To Kill a Mockingbird')) #| Q(review__user__name__icontains = 'Sarah Taylor')
+    serializer_class = ReviewSerializer  # Класс сериализации для валидации и сериализации данных
+    permission_classes = [AllowAny, ]  # Права доступа к представлению. AllowAny - доступ открыт для всех
+
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        return Review.objects.filter(Q(comment__startswith='A') & Q(rating__startswith='5'))
+
+    def get(self, request, *args, **kwargs):
+        # Используем пагинацию
+        self.pagination_class.page_size = 1  # Количество элементов на странице
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    def validate_email(self, email):
+        # Пример простой валидации email
+        if not email.endswith('@mail.com'):
+            raise serializers.ValidationError("Email должен быть на домене example.com")
+
+    @action(methods=['GET'], detail=False)
+    def custom_list_action(self, request, *args, **kwargs):
+        # Пример логики для дополнительного метода списка (GET)
+        queryset = self.filter_queryset(self.get_queryset())
+        serialized_data = self.get_serializer(queryset, many=True).data
+        return Response({"message": "Custom List Action", "data": serialized_data})
+    
+    # @action(methods=['POST'], detail=True)
+    # def custom_detail_action(self, request, *args, **kwargs):
+    #     # Пример логики для дополнительного метода объекта (POST)
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(instance, data=request.data, partial=True)
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save()
+    #     return Response({"message": "Custom Detail Action", "data": serializer.data})
+    
