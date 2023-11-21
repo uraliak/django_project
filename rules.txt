@@ -5,4 +5,4 @@ Invoke-RestMethod -Method POST -Uri http://127.0.0.1:8000/authors/ -Body $jsonDa
 
 GET:
 
-Invoke-RestMethod -Method GET -Uri http://127.0.0.1:8000/authors/custom_list_action/
+Invoke-RestMethod -Method GET -Uri http://127.0.0.1:8000/authors/

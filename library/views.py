@@ -16,7 +16,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 # from django.views.generic.list import ListView 
 
-class AuthorListView(viewsets.ModelViewSet): # (ListView)
+class AuthorViewSet(viewsets.ModelViewSet): # (viewsets.ModelViewSet, ListView, generics.ListCreateAPIView) AuthorListView
     model = Author
     template_name = 'author_list.html'
     queryset = Author.objects.all()  # Данные с которыми хотим производить манипуляции
@@ -41,11 +41,6 @@ class AuthorListView(viewsets.ModelViewSet): # (ListView)
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-    
-    def validate_email(self, email):
-        # Пример простой валидации email
-        if not email.endswith('@mail.com'):
-            raise serializers.ValidationError("Email должен быть на домене example.com")
 
     @action(methods=['GET'], detail=False)
     def custom_list_action(self, request, *args, **kwargs):
@@ -54,16 +49,16 @@ class AuthorListView(viewsets.ModelViewSet): # (ListView)
         serialized_data = self.get_serializer(queryset, many=True).data
         return Response({"message": "Custom List Action", "data": serialized_data})
 
-    # @action(methods=['POST'], detail=True)
-    # def custom_detail_action(self, request, *args, **kwargs):
-    #     # Пример логики для дополнительного метода объекта (POST)
-    #     instance = self.get_object()
-    #     serializer = self.get_serializer(instance, data=request.data, partial=True)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-    #     return Response({"message": "Custom Detail Action", "data": serializer.data})
+    @action(methods=['POST'], detail=True)
+    def custom_detail_action(self, request, *args, **kwargs):
+        # Пример логики для дополнительного метода объекта (POST)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "Custom Detail Action", "data": serializer.data})
 
-class PublisherListView(generics.ListCreateAPIView): # (ListView)
+class PublisherViewSet(viewsets.ModelViewSet): # (ListView, generics.ListCreateAPIView)
     model = Publisher 
     template_name = 'publisher_list.html'
     queryset = Publisher.objects.all()  # Данные с которыми хотим производить манипуляции
@@ -89,18 +84,13 @@ class PublisherListView(generics.ListCreateAPIView): # (ListView)
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-    
-    def validate_email(self, email):
-        # Пример простой валидации email
-        if not email.endswith('@mail.com'):
-            raise serializers.ValidationError("Email должен быть на домене example.com")
 
-    # @action(methods=['GET'], detail=False)
-    # def custom_list_action(self, request, *args, **kwargs):
-    #     # Пример логики для дополнительного метода списка (GET)
-    #     queryset = self.filter_queryset(self.get_queryset())
-    #     serialized_data = self.get_serializer(queryset, many=True).data
-    #     return Response({"message": "Custom List Action", "data": serialized_data})
+    @action(methods=['GET'], detail=False)
+    def custom_list_action(self, request, *args, **kwargs):
+        # Пример логики для дополнительного метода списка (GET)
+        queryset = self.filter_queryset(self.get_queryset())
+        serialized_data = self.get_serializer(queryset, many=True).data
+        return Response({"message": "Custom List Action", "data": serialized_data})
 
     @action(methods=['POST'], detail=True)
     def custom_detail_action(self, request, *args, **kwargs):
@@ -111,7 +101,7 @@ class PublisherListView(generics.ListCreateAPIView): # (ListView)
         serializer.save()
         return Response({"message": "Custom Detail Action", "data": serializer.data})
 
-class LibraryListView(generics.ListCreateAPIView): # (ListView)
+class LibraryViewSet(viewsets.ModelViewSet): # (ListView, generics.ListCreateAPIView)
     model = Library
     template_name = 'library_list.html'
     queryset = Library.objects.all()  # Данные с которыми хотим производить манипуляции
@@ -136,20 +126,14 @@ class LibraryListView(generics.ListCreateAPIView): # (ListView)
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-    
-    def validate_email(self, email):
-        # Пример простой валидации email
-        if not email.endswith('@mail.com'):
-            raise serializers.ValidationError("Email должен быть на домене example.com")
 
-    # @action(methods=['GET'], detail=False)
-    # def custom_list_action(self, request, *args, **kwargs):
-    #     # Пример логики для дополнительного метода списка (GET)
-    #     queryset = self.filter_queryset(self.get_queryset())
-    #     serialized_data = self.get_serializer(queryset, many=True).data
-    #     return Response({"message": "Custom List Action", "data": serialized_data})
+    @action(methods=['GET'], detail=False)
+    def custom_list_action(self, request, *args, **kwargs):
+        # Пример логики для дополнительного метода списка (GET)
+        queryset = self.filter_queryset(self.get_queryset())
+        serialized_data = self.get_serializer(queryset, many=True).data
+        return Response({"message": "Custom List Action", "data": serialized_data})
 
-    
     @action(methods=['POST'], detail=True)
     def custom_detail_action(self, request, *args, **kwargs):
         # Пример логики для дополнительного метода объекта (POST)
@@ -161,7 +145,7 @@ class LibraryListView(generics.ListCreateAPIView): # (ListView)
 
       # Права доступа к представлению. AllowAny - доступ открыт для всех
 
-class BookListView(viewsets.ModelViewSet): # (ListView)
+class BookViewSet(viewsets.ModelViewSet): # (ListView, generics.ListCreateAPIView)
     model = Book
     template_name = 'book_list.html'
     queryset = Book.objects.all()
@@ -172,7 +156,6 @@ class BookListView(viewsets.ModelViewSet): # (ListView)
     pagination_class = PageNumberPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'author__name', 'publisher__name', 'library__name']
-
     
     def get_queryset(self):
         return Book.objects.filter(Q(title__startswith='T') & ~Q(publisher__name='HarperCollins'))
@@ -189,11 +172,7 @@ class BookListView(viewsets.ModelViewSet): # (ListView)
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-    
-    # def validate_email(self, email):
-    #     # Пример простой валидации email
-    #     if not email.endswith('@mail.com'):
-    #         raise serializers.ValidationError("Email должен быть на домене example.com")
+        
     @action(methods=['GET'], detail=False)
     def custom_list_action(self, request, *args, **kwargs):
         # Пример логики для дополнительного метода списка (GET)
@@ -201,16 +180,16 @@ class BookListView(viewsets.ModelViewSet): # (ListView)
         serialized_data = self.get_serializer(queryset, many=True).data
         return Response({"message": "Custom List Action", "data": serialized_data})
 
-    # @action(methods=['POST'], detail=True)
-    # def custom_detail_action(self, request, *args, **kwargs):
-    #     # Пример логики для дополнительного метода объекта (POST)
-    #     instance = self.get_object()
-    #     serializer = self.get_serializer(instance, data=request.data, partial=True)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-    #     return Response({"message": "Custom Detail Action", "data": serializer.data})
+    @action(methods=['POST'], detail=True)
+    def custom_detail_action(self, request, *args, **kwargs):
+        # Пример логики для дополнительного метода объекта (POST)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "Custom Detail Action", "data": serializer.data})
 
-class UserListView(generics.ListCreateAPIView): # (ListView)
+class UserViewSet(viewsets.ModelViewSet): # (ListView, generics.ListCreateAPIView)
     model = User
     template_name = 'user_list.html'
     queryset = User.objects.all()  # Данные с которыми хотим производить манипуляции
@@ -235,19 +214,13 @@ class UserListView(generics.ListCreateAPIView): # (ListView)
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-    
-    
-    # def validate_email(self, email):
-    #     # Пример простой валидации email
-    #     if not email.endswith('@mail.com'):
-    #         raise serializers.ValidationError("Email должен быть на домене example.com")
 
-    # @action(methods=['GET'], detail=False)
-    # def custom_list_action(self, request, *args, **kwargs):
-    #     # Пример логики для дополнительного метода списка (GET)
-    #     queryset = self.filter_queryset(self.get_queryset())
-    #     serialized_data = self.get_serializer(queryset, many=True).data
-    #     return Response({"message": "Custom List Action", "data": serialized_data})
+    @action(methods=['GET'], detail=False)
+    def custom_list_action(self, request, *args, **kwargs):
+        # Пример логики для дополнительного метода списка (GET)
+        queryset = self.filter_queryset(self.get_queryset())
+        serialized_data = self.get_serializer(queryset, many=True).data
+        return Response({"message": "Custom List Action", "data": serialized_data})
 
     @action(methods=['POST'], detail=True)
     def custom_detail_action(self, request, *args, **kwargs):
@@ -258,7 +231,7 @@ class UserListView(generics.ListCreateAPIView): # (ListView)
         serializer.save()
         return Response({"message": "Custom Detail Action", "data": serializer.data})
 
-class ReviewListView(viewsets.ModelViewSet): # (ListView)
+class ReviewViewSet(viewsets.ModelViewSet): # (ListView, generics.ListCreateAPIView)
     model = Review
     template_name = 'review_list.html'
     queryset = Review.objects.all()  # Данные с которыми хотим производить манипуляции
@@ -284,11 +257,6 @@ class ReviewListView(viewsets.ModelViewSet): # (ListView)
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-    
-    def validate_email(self, email):
-        # Пример простой валидации email
-        if not email.endswith('@mail.com'):
-            raise serializers.ValidationError("Email должен быть на домене example.com")
 
     @action(methods=['GET'], detail=False)
     def custom_list_action(self, request, *args, **kwargs):
@@ -297,12 +265,12 @@ class ReviewListView(viewsets.ModelViewSet): # (ListView)
         serialized_data = self.get_serializer(queryset, many=True).data
         return Response({"message": "Custom List Action", "data": serialized_data})
     
-    # @action(methods=['POST'], detail=True)
-    # def custom_detail_action(self, request, *args, **kwargs):
-    #     # Пример логики для дополнительного метода объекта (POST)
-    #     instance = self.get_object()
-    #     serializer = self.get_serializer(instance, data=request.data, partial=True)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-    #     return Response({"message": "Custom Detail Action", "data": serializer.data})
+    @action(methods=['POST'], detail=True)
+    def custom_detail_action(self, request, *args, **kwargs):
+        # Пример логики для дополнительного метода объекта (POST)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "Custom Detail Action", "data": serializer.data})
     
