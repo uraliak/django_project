@@ -17,6 +17,12 @@ class AuthorAdmin(ImportExportModelAdmin):
     export_order = ('id', 'name', 'email', 'phone')
     ordering = ('id',)
 
+    def get_created_at(self, instance):
+        return instance.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    def get_phone(self, instance):
+        return instance.phone.replace('+7', '8')
+
 class PublisherAdmin(ImportExportModelAdmin):
     resource_class = PublisherResource
     list_display = ('id', 'name', 'address')
@@ -94,8 +100,8 @@ class ReviewAdmin(ImportExportModelAdmin):
     date_hierarchy = 'created_at'
     list_display_links = ('id',)
     raw_id_fields = ('book', 'user',)
-    readonly_fields = ('created_at',)
-    search_fields = ('book__title', 'user__name', 'comment')
+    # readonly_fields = ('created_at',)
+    # search_fields = ('book__title', 'user__name', 'comment')
 
     
 
