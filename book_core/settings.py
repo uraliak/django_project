@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'library.apps.LibraryConfig',
     'rest_framework', # Подключение drf к проекту
     'simple_history', # Django-simple-history
-    'django_filters', #Фильтрация
+    'django_filters', # Фильтрация
+    'import_export', # Экспорт данных из админки в эксель 
 ]
 
 MIDDLEWARE = [

@@ -1,3 +1,4 @@
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import AuthorViewSet, PublisherViewSet, LibraryViewSet, BookViewSet, UserViewSet, ReviewViewSet
 
@@ -9,7 +10,9 @@ router.register(r'books', BookViewSet, basename='book')
 router.register(r'users', UserViewSet, basename='user')
 router.register(r'reviews', ReviewViewSet, basename='review')
 
-urlpatterns = router.urls
+urlpatterns = [
+    path('api/', include(router.urls)),
+]
 
 # from django.urls import path 
 # from .views import AuthorListView, PublisherListView, LibraryListView, BookListView, UserListView, ReviewListView
