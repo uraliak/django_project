@@ -6,10 +6,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Your code here
-        book_select = Book.objects.select_related('author').get(id=5)
+        book_select = Book.objects.select_related('author').get(id=5) #title='1984'
         print(book_select.author.name)
 
-        book_prefetch = Book.objects.prefetch_related('library').get(id=5)
+        book_prefetch = Book.objects.prefetch_related('library').get(id=10)
         library = book_prefetch.library.all()
         print(library)
 
