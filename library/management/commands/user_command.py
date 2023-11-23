@@ -21,3 +21,5 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f'Email: {user.email}'))
         except User.DoesNotExist:
             self.stdout.write(self.style.WARNING(f'User with name "{user_name}" not found in the database.'))
+
+#python manage.py user_command "John Smith"
