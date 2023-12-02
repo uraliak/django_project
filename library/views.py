@@ -25,6 +25,9 @@ class AuthorViewSet(viewsets.ModelViewSet): # (viewsets.ModelViewSet, ListView, 
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name', 'email', 'phone']
 
+    # def get_queryset(self):
+    #     return Author.objects.filter(Q(name__startswith='J') | Q(email__startswith='g')) 
+
     @action(methods=['GET'], detail=False)
     def custom_list_action(self, request, *args, **kwargs):
         # Пример логики для дополнительного метода списка (GET)
@@ -79,8 +82,8 @@ class LibraryViewSet(viewsets.ModelViewSet): # (ListView, generics.ListCreateAPI
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['name', 'address']
 
-    def get_queryset(self):
-        return Library.objects.filter(Q(name__startswith='B') | Q(name__startswith='L'))
+    # def get_queryset(self):
+    #     return Library.objects.filter(Q(name__startswith='B') | Q(name__startswith='L'))
 
     @action(methods=['GET'], detail=False)
     def custom_list_action(self, request, *args, **kwargs):
@@ -111,8 +114,8 @@ class BookViewSet(viewsets.ModelViewSet): # (ListView, generics.ListCreateAPIVie
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'author__name', 'publisher__name', 'library__name']
     
-    def get_queryset(self):
-        return Book.objects.filter(Q(title__startswith='T') & ~Q(publisher__name='HarperCollins'))
+    # def get_queryset(self):
+    #     return Book.objects.filter(Q(title__startswith='T') & ~Q(publisher__name='HarperCollins'))
         
     @action(methods=['GET'], detail=False)
     def custom_list_action(self, request, *args, **kwargs):

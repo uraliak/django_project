@@ -53,6 +53,10 @@ class LibrarySerializer(serializers.ModelSerializer):
         return value
 
 class BookSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer()
+    publisher = PublisherSerializer()
+    library = LibrarySerializer(many=True)
+
     class Meta:
         model = Book
         fields = '__all__'
@@ -87,6 +91,9 @@ class UserSerializer(serializers.ModelSerializer):
         return email
 
 class ReviewSerializer(serializers.ModelSerializer):
+    book = BookSerializer()
+    user = UserSerializer()
+
     class Meta:
         model = Review
         fields = '__all__'
