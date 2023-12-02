@@ -22,25 +22,8 @@ class AuthorViewSet(viewsets.ModelViewSet): # (viewsets.ModelViewSet, ListView, 
     queryset = Author.objects.all()  # Данные с которыми хотим производить манипуляции
     serializer_class = AuthorSerializer  # Класс сериализации для валидации и сериализации данных
     permission_classes = [AllowAny, ]  # Права доступа к представлению. AllowAny - доступ открыт для всех
-    pagination_class = PageNumberPagination
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name', 'email', 'phone']
-
-    def get_queryset(self):
-        return Author.objects.filter(Q(name__startswith='J') | Q(email__startswith='g')) 
-
-    def get(self, request, *args, **kwargs):
-        # Используем пагинацию
-        self.pagination_class.page_size = 2  # Количество элементов на странице
-        queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
 
     @action(methods=['GET'], detail=False)
     def custom_list_action(self, request, *args, **kwargs):
@@ -65,25 +48,11 @@ class PublisherViewSet(viewsets.ModelViewSet): # (ListView, generics.ListCreateA
     # queryset = Book.objects.filter(Q(publisher__address__icontains='New York, USA')) #| Q(publisher__name__icontains='Wiley')
     serializer_class = PublisherSerializer  # Класс сериализации для валидации и сериализации данных
     permission_classes = [AllowAny, ]  # Права доступа к представлению. AllowAny - доступ открыт для всех
-    pagination_class = PageNumberPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'address']
 
     def get_queryset(self):
         return Publisher.objects.filter(~Q(address__startswith='N'))
-
-    def get(self, request, *args, **kwargs):
-        # Используем пагинацию
-        self.pagination_class.page_size = 2 # Количество элементов на странице
-        queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
 
     @action(methods=['GET'], detail=False)
     def custom_list_action(self, request, *args, **kwargs):
@@ -107,25 +76,11 @@ class LibraryViewSet(viewsets.ModelViewSet): # (ListView, generics.ListCreateAPI
     queryset = Library.objects.all()  # Данные с которыми хотим производить манипуляции
     serializer_class = LibrarySerializer  # Класс сериализации для валидации и сериализации данных
     permission_classes = [AllowAny, ]
-    pagination_class = PageNumberPagination
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['name', 'address']
 
     def get_queryset(self):
         return Library.objects.filter(Q(name__startswith='B') | Q(name__startswith='L'))
-
-    def get(self, request, *args, **kwargs):
-        # Используем пагинацию
-        self.pagination_class.page_size = 2  # Количество элементов на странице
-        queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
 
     @action(methods=['GET'], detail=False)
     def custom_list_action(self, request, *args, **kwargs):
@@ -153,25 +108,11 @@ class BookViewSet(viewsets.ModelViewSet): # (ListView, generics.ListCreateAPIVie
     # queryset = Book.objects.filter(Q(title__icontains='1984') | Q(author__name__icontains='William Golding') | Q(publisher__name__icontains = 'HarperCollins'))
     serializer_class = BookSerializer # Класс сериализации для валидации и сериализации данных
     permission_classes = [AllowAny, ]  # Права доступа к представлению. AllowAny - доступ открыт для всех
-    pagination_class = PageNumberPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'author__name', 'publisher__name', 'library__name']
     
     def get_queryset(self):
         return Book.objects.filter(Q(title__startswith='T') & ~Q(publisher__name='HarperCollins'))
-
-    def get(self, request, *args, **kwargs):
-        # Используем пагинацию
-        self.pagination_class.page_size = 1 # Количество элементов на странице
-        queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
         
     @action(methods=['GET'], detail=False)
     def custom_list_action(self, request, *args, **kwargs):
@@ -195,25 +136,11 @@ class UserViewSet(viewsets.ModelViewSet): # (ListView, generics.ListCreateAPIVie
     queryset = User.objects.all()  # Данные с которыми хотим производить манипуляции
     serializer_class = UserSerializer  # Класс сериализации для валидации и сериализации данных
     permission_classes = [AllowAny, ]  # Права доступа к представлению. AllowAny - доступ открыт для всех
-    pagination_class = PageNumberPagination
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['name', 'email']
 
     def get_queryset(self):
         return User.objects.filter(Q(email__startswith='j') | Q(email__startswith='m'))
-
-    def get(self, request, *args, **kwargs):
-        # Используем пагинацию
-        self.pagination_class.page_size = 2  # Количество элементов на странице
-        queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
 
     @action(methods=['GET'], detail=False)
     def custom_list_action(self, request, *args, **kwargs):
@@ -238,25 +165,11 @@ class ReviewViewSet(viewsets.ModelViewSet): # (ListView, generics.ListCreateAPIV
     # queryset = Book.objects.filter(Q(review__rating__icontains='5') | Q(title__icontains='To Kill a Mockingbird')) #| Q(review__user__name__icontains = 'Sarah Taylor')
     serializer_class = ReviewSerializer  # Класс сериализации для валидации и сериализации данных
     permission_classes = [AllowAny, ]  # Права доступа к представлению. AllowAny - доступ открыт для всех
-    pagination_class = PageNumberPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ['book__title', 'user__name', 'rating', 'comment']
 
     def get_queryset(self):
         return Review.objects.filter(Q(comment__startswith='A') & Q(rating__startswith='5'))
-
-    def get(self, request, *args, **kwargs):
-        # Используем пагинацию
-        self.pagination_class.page_size = 1  # Количество элементов на странице
-        queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
 
     @action(methods=['GET'], detail=False)
     def custom_list_action(self, request, *args, **kwargs):
