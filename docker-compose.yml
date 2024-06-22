@@ -1,0 +1,83 @@
+version: '3.9'
+
+services:
+  django_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    hostname: book_core
+    stdin_open: true
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/code
+    depends_on:
+      - redis
+    networks:
+      - book_core-net
+
+
+  redis:
+    image: redis:alpine
+    hostname: redis
+    networks:
+      - book_core-net
+    ports:
+      - "6379:6379"
+
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "celery -A book_core worker -l info"
+    volumes:
+      - ./:/code
+    depends_on:
+      - redis
+      - django_app
+    restart: on-failure
+    networks:
+      - book_core-net
+
+
+  celery_beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "celery -A book_core beat -l info"
+    volumes:
+      - ./:/code
+    depends_on:
+      - celery_worker
+    restart: on-failure
+    networks:
+      - book_core-net
+
+
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A book_core flower --port=5555
+    networks:
+      - book_core-net
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
+      - django_app
+
+
+  mailhog:
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - book_core-net
+networks:
+  book_core-net:

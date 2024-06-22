@@ -1,18 +1,23 @@
-from import_export import resources
-from .models import Author, Publisher, Library, Book, User, Review
 from django.utils import timezone
+from import_export import resources
+
+from .models import Author, Book, Library, Publisher, Review, User
+
 
 class AuthorResource(resources.ModelResource):
     class Meta:
         model = Author
 
+
 class PublisherResource(resources.ModelResource):
     class Meta:
         model = Publisher
 
+
 class LibraryResource(resources.ModelResource):
     class Meta:
         model = Library
+
 
 class BookResource(resources.ModelResource):
     class Meta:
@@ -27,9 +32,11 @@ class BookResource(resources.ModelResource):
     def dehydrate_library(self, book):
         return ", ".join([library.name for library in book.library.all()])
 
+
 class UserResource(resources.ModelResource):
     class Meta:
         model = User
+
 
 class ReviewResource(resources.ModelResource):
     class Meta:
@@ -40,5 +47,3 @@ class ReviewResource(resources.ModelResource):
 
     def dehydrate_user(self, review):
         return review.user.name if review.user else None
-
-   

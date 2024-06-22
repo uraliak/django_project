@@ -6,32 +6,38 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('library', '0006_author_created_at_book_created_at_library_created_at_and_more'),
+        (
+            "library",
+            "0006_author_created_at_book_created_at_library_created_at_and_more",
+        ),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='author',
-            options={'verbose_name': 'Автор', 'verbose_name_plural': 'Авторы'},
+            name="author",
+            options={"verbose_name": "Автор", "verbose_name_plural": "Авторы"},
         ),
         migrations.AlterModelOptions(
-            name='book',
-            options={'verbose_name': 'Книга', 'verbose_name_plural': 'Книги'},
+            name="book",
+            options={"verbose_name": "Книга", "verbose_name_plural": "Книги"},
         ),
         migrations.AlterModelOptions(
-            name='library',
-            options={'verbose_name': 'Библиотека', 'verbose_name_plural': 'Библиотеки'},
+            name="library",
+            options={"verbose_name": "Библиотека", "verbose_name_plural": "Библиотеки"},
         ),
         migrations.AlterModelOptions(
-            name='publisher',
-            options={'verbose_name': 'Издатель', 'verbose_name_plural': 'Издатели'},
+            name="publisher",
+            options={"verbose_name": "Издатель", "verbose_name_plural": "Издатели"},
         ),
         migrations.AlterModelOptions(
-            name='review',
-            options={'verbose_name': 'Отзыв', 'verbose_name_plural': 'Отзывы'},
+            name="review",
+            options={"verbose_name": "Отзыв", "verbose_name_plural": "Отзывы"},
         ),
         migrations.AlterModelOptions(
-            name='user',
-            options={'verbose_name': 'Пользователь', 'verbose_name_plural': 'Пользователи'},
+            name="user",
+            options={
+                "verbose_name": "Пользователь",
+                "verbose_name_plural": "Пользователи",
+            },
         ),
     ]

@@ -1,9 +1,12 @@
 import random
+
 from django.core.management.base import BaseCommand
+
 from library.models import Review
 
+
 class Command(BaseCommand):
-    help = 'Get a random quote from reviews'
+    help = "Get a random quote from reviews"
 
     def handle(self, *args, **options):
         # Получаем все отзывы из базы данных
@@ -17,7 +20,7 @@ class Command(BaseCommand):
             quote = random_review.comment[:50]  # Возьмем первые 50 символов комментария
             self.stdout.write(self.style.SUCCESS(f'Random Quote: "{quote}"'))
         else:
-            self.stdout.write(self.style.WARNING('No reviews found in the database.'))
+            self.stdout.write(self.style.WARNING("No reviews found in the database."))
 
 
-#python manage.py review_command
+# python manage.py review_command

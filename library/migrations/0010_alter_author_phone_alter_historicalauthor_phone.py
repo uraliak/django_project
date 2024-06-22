@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('library', '0009_author_phone_historicalauthor_phone'),
+        ("library", "0009_author_phone_historicalauthor_phone"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='author',
-            name='phone',
-            field=models.CharField(default='default_value_here', max_length=15),
+            model_name="author",
+            name="phone",
+            field=models.CharField(default="default_value_here", max_length=15),
         ),
         migrations.AlterField(
-            model_name='historicalauthor',
-            name='phone',
-            field=models.CharField(default='default_value_here', max_length=15),
+            model_name="historicalauthor",
+            name="phone",
+            field=models.CharField(default="default_value_here", max_length=15),
         ),
     ]
